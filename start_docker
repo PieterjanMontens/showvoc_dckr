@@ -1,0 +1,22 @@
+#!/bin/bash
+TAG="showvoc"
+PORT_CONTAINER=80
+PORT_HOST=8080
+
+# Options :
+# Build : Add "--target [TARGET]" to set build target
+# Run : Add "--network [NETWORK]" to set network
+# Run : Add "-v `pwd`/[DIR]:/[DOCKER_DIR]" to mount volumes
+
+mkdir temp-data
+
+docker build -t "${TAG}" -f ./Dockerfile . \
+    --target deploy-testing \
+    --build-arg SOME=ARG \
+&& docker run --rm -it \
+    -e SOME=ENV \
+    -p ${PORT_HOST}:${PORT_CONTAINER} \
+    -p 1979:1979 \
+    -v `pwd`/temp-data:/opt/semturk/data \
+    --name "${TAG}" \
+    "${TAG}"
